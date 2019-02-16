@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>::Resume Profile</title>
+	<link rel="stylesheet" type="text/css" href="resume.css">
+</head>
+<body>
+	<div class="main">
+		<div class="left">
+		</div>
+		<div class="right">
+		</div>
+	</div>
+
+</body>
+</html>
+<script type="text/javascript" src="./js/swregister.js"></script>
+<script type="text/javascript">
+
+	var url=window.location.search;
+	var length=url.length;
+	var profile=url.slice(1,length);
+
+	var indexedDB=window.indexedDB || window.mozIndexedDB ||
+		 window.webkitIndexedDB || window.msIndexedDB;
+		 indexedDB ? console.log("success") : console.log("error");
+
+         var open;
+         var result;
+         var store;
+         var tx;
+		 var request = indexedDB.open("database",1);
+		 request.onupgradeneeded = function(e){
+		 	open = e.target.result;
+		 	store = open.createObjectStore("resumedata",{keyPath:"name"});
+		 } 
+		 request.onerror = function(e){
+		 	console.log("error"+e);
+
+		 }
+		 request.onsuccess = function(e){
+		 	open = e.target.result;
+		 	tx = open.transaction("resumedata","readwrite");
+		 	store = tx.objectStore("resumedata");
+		 	var info=store.get(profile);
+		 	info.onsuccess=function(data){
+		 		console.log(data);
+		 		display(data.target.result);
+		 	}
+	}
+	var left=document.querySelector(".left");
+	var left=document.querySelector(".right");
+	function display(d){
+		var image=document.createElement("img");
+		image.src="./image1.jpg";
+		left.append(image);
+		
+		var h2=document.createElement("h2");
+		h2.textContent=d.name;
+		left.appendChild(h2);
+
+		var h21=document.createElement("h3");
+		h21.textContent=d.rollno;
+		left.appendChild(h21);
+
+		var h22=document.createElement("h3");
+		h22.textContent=d.mail;
+		left.appendChild(h22);
+		
+		var h23=document.createElement("h3");
+		h23.textContent=d.mobile;
+		left.appendChild(h23);
+
+		var h21=document.createElement("h3");
+		h21.textContent=d.native;
+		left.appendChild(h21);
+
+		var right=document.querySelector(".right");
+		var h1=document.createElement("h1");
+		h1.innerHTML="RESUME BUILDING";
+		right.appendChild(h1);
+		var hr=document.createElement("hr");
+		right.appendChild(hr);
+        var h2=document.createElement("h2");
+        h2.innerHTML="Career Objective";
+        right.appendChild(h2);
+		var p=document.createElement("p");
+		p.textContent=d.car;
+		right.appendChild(p);
+		var hr=document.createElement("hr");
+		right.appendChild(hr);
+	
+       var h2=document.createElement("h2");
+		h2.innerHTML="Educational Details";
+		right.appendChild(h2);
+		var table=document.createElement("table");
+		table.border="1";
+		var tr1="<tr><td>degree</td><td>instution</td><td>per</td><td>yop</td></tr>";
+		var tr2="";
+		for(i=0;i<d.education.length;i++)
+		{
+		  tr2=tr2+"<tr><td>"+d.education[i].degree+"</td><td>"+d.education[i].inst+"</td><td>"+d.education[i].per+"</td><td>"+d.education[i].yop+"</td></tr>";
+		}
+		table.innerHTML=tr1+tr2;
+		right.appendChild(table);
+		var hr=document.createElement("hr");
+		right.appendChild(hr);
+	}
+ 
+</script>
